@@ -64,8 +64,19 @@ function unlink {
   if (!($file.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
     $file.Is
     Write-Host "file is not symlink"
-    return;
+    return
   }
 
   $file.Delete()
+}
+
+# export
+function export {
+  if ($args.Length -eq 0) {
+    printenv
+    return
+  }
+
+  ($key, $value) = $args[0] -split "="
+  set-item "env:${key}" $value
 }
