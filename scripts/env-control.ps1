@@ -17,7 +17,7 @@ function userenv {
     return
   }
 
-  set-item "env:${key}" $value
+  Set-Item "env:${key}" $value
   [System.Environment]::SetEnvironmentVariable($key, $value, "User")
 }
 
@@ -49,7 +49,7 @@ function addpath {
 
   $tmpPath = $list -join ";"
 
-  set-item "env:path" $tmpPath
+  Set-Item "env:path" $tmpPath
   [System.Environment]::SetEnvironmentVariable("path", $tmpPath, "User")
 }
 
@@ -73,6 +73,6 @@ function rmpath {
 
   $tmpPath = $list -join ";"
 
-  set-item "env:path" $tmpPath
+  Set-Item "env:path" $tmpPath
   [System.Environment]::SetEnvironmentVariable("path", $tmpPath, "User")
 }
