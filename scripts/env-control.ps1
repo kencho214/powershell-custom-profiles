@@ -1,3 +1,13 @@
+##################
+# Variables
+##################
+
+Set-Item "Env:hosts" "C:\Windows\System32\drivers\etc\hosts"
+
+##################
+# Functions
+##################
+
 function userenv {
   if ($args.Length -eq 0) {
     printenv
