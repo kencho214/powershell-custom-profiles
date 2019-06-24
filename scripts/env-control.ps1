@@ -5,6 +5,74 @@
 Set-Item "Env:hosts" "C:\Windows\System32\drivers\etc\hosts"
 
 ##################
+# Proxy
+##################
+
+function addNoProxy {
+  $noProxy = $($Env:NO_PROXY -split "\s*\,\s*")
+
+  $tobeAdded = New-Object System.Collections.ArrayList
+  foreach ($elm in ($args)) {
+    $tobeAdded += $($($elm -replace "\s+", ",") -split "\s*\,\s*");
+  }
+
+  $list = New-Object System.Collections.ArrayList
+  foreach ($elm in ($noProxy + $tobeAdded)) {
+    if (!$elm) { continue }
+    if ($list -contains $elm) { continue }
+    if ($list -match "(^\s*$)") { continue }
+    $list += $elm
+  }
+
+  $list = $list | Sort-Object
+  
+  userenv "NO_PROXY=$($list -join ',')"
+}
+
+function rmNoProxy {
+  $noProxy = $($Env:NO_PROXY -split "\s*\,\s*")
+
+  $tobeRemoved = New-Object System.Collections.ArrayList
+  foreach ($elm in ($args)) {
+    $tobeRemoved += $($($elm -replace "\s+", ",") -split "\s*\,\s*");
+  }
+  
+  $list = New-Object System.Collections.ArrayList
+  foreach ($elm in ($noProxy)) {
+    if (!$elm) { continue }
+    if ($list -contains $elm) { continue }
+    if ($tobeRemoved -contains $elm) { continue }
+    if ($list -match "(^\s*$)") { continue }
+    $list += $elm
+  }
+
+  $list = $list | Sort-Object
+  
+  userenv "NO_PROXY=$($list -join ',')"
+}
+
+function printNoProxy {
+  Write-Output $($Env:NO_PROXY -split "\s*\,\s*")
+}
+
+function noproxy {
+  if ($args.Length -eq 0) {
+    return printNoProxy
+  }
+  if ($args[0] -eq "get") {
+    return printNoProxy
+  }
+  if ($args[0] -eq "add") {
+    return addNoProxy $args[1..$args.Length]
+  }
+  if ($args[0] -eq "rm") {
+    return rmNoProxy $args[1..$args.Length]
+  }
+
+  Write-Host "noproxy [add|rm] [host1,host2,...]"
+}
+
+##################
 # Functions
 ##################
 
