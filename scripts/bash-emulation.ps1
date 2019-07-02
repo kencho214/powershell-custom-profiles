@@ -184,6 +184,9 @@ Function grep {
   }
 }
 
+# curl - unbind predefined alias
+Remove-Item alias:curl -Force
+
 # printenv
 function printenv { Get-ChildItem Env: }
 
