@@ -185,7 +185,17 @@ Function grep {
 }
 
 # curl - unbind predefined alias
-Remove-Item alias:curl -Force
+if ($alias:curl) {
+  $isCurlExist = Get-Command curll > $null 2> $null
+  if (!$isCurlExist) {
+    Write-Host "  curl.exe is not found, and you can install curl for windows from "
+    Write-Host "  https://curl.haxx.se/download.html"
+  }
+  else {
+    Write-Host unbind curl alias
+    Remove-Item alias:curl -Force
+  }
+}
 
 # printenv
 function printenv { Get-ChildItem Env: }
