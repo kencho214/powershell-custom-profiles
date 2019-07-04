@@ -186,7 +186,7 @@ Function grep {
 
 # curl - unbind predefined alias
 if ($alias:curl) {
-  $isCurlExist = Get-Command curll > $null 2> $null
+  $isCurlExist = Get-Command curl > $null 2> $null
   if (!$isCurlExist) {
     Write-Host "  curl.exe is not found, and you can install curl for windows from "
     Write-Host "  https://curl.haxx.se/download.html"
