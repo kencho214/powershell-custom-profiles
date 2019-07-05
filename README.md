@@ -54,3 +54,149 @@ $ printenv
 ## Add new custom scripts
 
 Create new `.ps1` file in `scripts` directory. `scripts` directory is loaded automatically by `custom-profile.ps1`
+
+## APIs
+
+### base64
+
+```powershell
+# encode file
+base64 [filename]
+
+# encode text
+base64 [-t|--text] [string]
+
+# decode base64 text file
+base64 [-d|--decode] [filename]
+
+# decode base64 text
+base64 [-d|--decode] [-t|--text] [string]
+```
+
+### sudo
+
+```ps
+# open new powershell as admin
+su
+
+# exec command as admin
+sudo [command ...]
+```
+
+### pwd
+
+```ps
+# get current location as full path
+pwd
+```
+
+### env
+
+```ps
+# print environment variables of current session
+printenv
+
+# print environment variables of current session
+export
+
+# set environment variable of current session
+export [key]=[value]
+```
+
+### user env
+
+```ps
+# print environment variables of current user
+userenv
+
+# print environment variable of current user
+userenv [key]
+
+# set environment variable of current user
+userenv [key]=[value]
+
+# print NO_PROXY with line feed
+printNoProxy
+
+# add NO_PROXY values to user env
+addNoProxy [ip-or-host],[ip-or-host...]
+addNoProxy [ip-or-host] [ip-or-host...]
+
+# remove NO_PROXY values from user env
+rmNoProxy [ip-or-host],[ip-or-host...]
+rmNoProxy [ip-or-host] [ip-or-host...]
+
+# NO_PROXY control
+noproxy [get|add|rm] [ip-or-host],[ip-or-host...]
+noproxy [get|add|rm] [ip-or-host] [ip-or-host...]
+
+# get PATH with line feed
+getpath
+
+# add PATH(s) to current user env
+addpath [path1] [path2] ...
+
+# remove PATH(s) from current user env
+rmpath [path1] [path2] ...
+```
+
+### file control
+
+```ps
+# create file
+touch [file name]
+
+# launch git vim
+vi
+vim
+
+# find command and print path or alias
+which [command name]
+
+# find command and print parent dir path
+where [command name]
+
+# make symbolic link
+ln -s [link name] [target path]
+mklink -s [link name] [target path]
+
+# remove symbolic link
+unlink [link name]
+```
+
+### something like grep
+
+```ps
+somecommand [args...] | grep [key]
+```
+
+### Hyper-V
+
+```ps
+# only enable hyper-v, need reboot your computer
+enable-hyperv
+
+# only disable hyper-v, need reboot your computer
+disable-hyperv
+```
+
+### Kubernetes
+
+```ps
+# abbr. of kubectl config
+kubecon
+
+# kuberctl context control
+
+# show contexts
+kubectx
+
+# use context
+kubectx [context name]
+
+# show name spaces by current context
+kubens
+
+# switch name space
+kubens [namespace]
+```
