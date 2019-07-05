@@ -265,10 +265,15 @@ function unlink {
 # export
 function export {
   if ($args.Length -eq 0) {
-    printenv
-    return
+    return printenv
   }
 
   ($key, $value) = $args[0] -split "="
-  set-item "env:${key}" $value
+  if ($key -and !$value) {
+    [System.Environment]::GetEnvironmentVariable($args[0])
+  }
+
+  if ($key -and $value) {
+    set-item "env:${key}" $value
+  }
 }
