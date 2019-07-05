@@ -15,15 +15,14 @@ function base64 {
 }
 
 function encodeBase64 {
-  $txt = ""
+  $bytes = ""
   if ($args[0] -eq "-t" -or $args[0] -eq "--text") {
-    $txt = $args[1]
+    $bytes = ([System.Text.Encoding]::Default).GetBytes($args[1])
   }
   else {
-    $txt = Get-Content $args[0]
+    $bytes = Get-Content $args[0] -Encoding Byte
   }
 
-  $bytes = ([System.Text.Encoding]::Default).GetBytes($txt)
   $rtn = [Convert]::ToBase64String($bytes)
   return $rtn
 }
