@@ -277,3 +277,8 @@ function export {
     set-item "env:${key}" $value
   }
 }
+
+# bd
+function bd {
+  cd ..
+}
