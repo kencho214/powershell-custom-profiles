@@ -1,7 +1,9 @@
 # k8s
 Set-Alias k kubectl
+function kk { kubectl apply -k . }
 
 # k8s contexts
+
 function kubecon { kubectl config $args }
 
 function kubectx { 
