@@ -48,7 +48,6 @@ function kubens {
 function bxlogin {
   ibmcloud login
   ibmcloud cr login
-  ibmcloud ks cluster config --cluster g-enterprise-dev
 }
 
 # function kubectx-use { kubectl config use-context $args }
