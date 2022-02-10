@@ -282,3 +282,7 @@ function export {
 function bd {
   cd ..
 }
+
+function command-history {
+  cat (Get-PSReadLineOption).HistorySavePath
+}
