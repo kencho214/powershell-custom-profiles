@@ -1,7 +1,7 @@
-# choco install peco
-# choco install golang
-# go get github.com/motemen/ghq
+# winget install peco
+# winget install golang
+# go install github.com/x-motemen/ghq@latest
 
-function gitr {
-  ghq look $(ghq list | peco)
+function repos {
+  code $(ghq list -p | peco) --disable-extensions
 }
