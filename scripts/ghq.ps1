@@ -3,5 +3,9 @@
 # go install github.com/x-motemen/ghq@latest
 
 function repos {
-  code $(ghq list -p | peco) --disable-extensions
+  $repo_path = $(ghq list -p | peco)
+
+  if ($repo_path.Length -ge 1) {
+    code $repo_path --disable-extensions
+  }
 }

@@ -164,6 +164,21 @@ mklink -s [link name] [target path]
 unlink [link name]
 ```
 
+### open with VSCode using ghq / peco
+
+You need to install peco, golang, ghq before using this command.
+
+```ps
+repos
+# interructive search
+QUERY>  [fuzzy search keyword]                             IgnoreCase [107 (1/4)]
+C:\Users\<UserDir>\work\git\github\angular-playground
+C:\Users\<UserDir>\work\git\github\electron-playground
+...
+```
+
+Select disired repo, then VSCode will open with the selected repo.
+
 ### something like grep
 
 ```ps
