@@ -18,7 +18,7 @@ PSCustomScripts = <Fullpath for project root>
 
 Import custom-profile.ps1 from your profile.ps1
 
-```
+```ps
 # C:\Users\<user>\Documents\WindowsPowerShell\profile.ps1
 
 Import-Module "${Env:PSCustomScripts}\custom-profile.ps1"
@@ -28,7 +28,7 @@ Import-Module "${Env:PSCustomScripts}\custom-profile.ps1"
 
 Launch new PowerShell terminal, then you will see;
 
-```
+```ps
 Windows PowerShell
 Copyright (C) Microsoft Corporation. All rights reserved.
 
@@ -37,7 +37,7 @@ Custom PowerShell Environment Loaded <<<
 
 use some sample scripts
 
-```
+```ps
 # alias of Get-Command
 $ which notepad
 > C:\WINDOWS\system32\notepad.exe
@@ -59,7 +59,7 @@ Create new `.ps1` file in `scripts` directory. `scripts` directory is loaded aut
 
 ### base64
 
-```powershell
+```ps
 # encode file
 base64 [filename]
 
@@ -169,7 +169,7 @@ unlink [link name]
 You need to install peco, golang, ghq before using this command.
 
 ```ps
-repos
+Repos
 # interructive search
 QUERY>  [fuzzy search keyword]                             IgnoreCase [107 (1/4)]
 C:\Users\<UserDir>\work\git\github\angular-playground
@@ -177,7 +177,29 @@ C:\Users\<UserDir>\work\git\github\electron-playground
 ...
 ```
 
-Select disired repo, then VSCode will open with the selected repo.
+```ps
+ReposRemote <owner-or-org>
+
+# interructive search for repos
+QUERY>  [fuzzy search keyword]                             IgnoreCase [107 (1/4)]
+angular-playground
+electron-playground
+...
+
+# there is the local repo, open it with VSCode then finish. If not, clone repo from remote.
+
+https://github.com/<owner-or-org>/<selected-repo>
+
+# interructive search for ghq root dirs. If there are multiple roots, you need to select one.
+QUERY>  [fuzzy search keyword]                             IgnoreCase [2 (1/1)]
+C:\users\<user>\ghq\repos
+<user-defined-ghq-root>
+...
+
+# Clone repo
+```
+
+VSCode will open with the repo accordingly.
 
 ### something like grep
 
