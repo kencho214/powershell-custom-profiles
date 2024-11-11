@@ -1,23 +1,19 @@
+######################################
 # sudo
-function Invoke-CommandRunAs {
-  $cd = (Get-Location).Path
-  $commands = "Set-Location $cd; Write-Host `"[Administrator] $cd> $args`"; $args; Pause; exit"
-  $bytes = [System.Text.Encoding]::Unicode.GetBytes($commands)
-  $encodedCommand = [Convert]::ToBase64String($bytes)
-  Start-Process powershell.exe -Verb RunAs -ArgumentList "-NoExit", "-encodedCommand", $encodedCommand
+# need "gsudo" to use this function
+# `winget install gerardog.gsudo`
+######################################
+function Invoke-As-Admin() {
+    if ($args.count -eq 0) {
+        gsudo
+        return
+    }
+    $cmd = $args -join ' '
+    gsudo "pwsh.exe -Login -Command { $cmd }"
 }
 
-Set-Alias sudo Invoke-CommandRunAs
-
-function Start-RunAs {
-  $cd = (Get-Location).Path
-  $commands = "Set-Location $cd; (Get-Host).UI.RawUI.WindowTitle += `" [Administrator]`""
-  $bytes = [System.Text.Encoding]::Unicode.GetBytes($commands)
-  $encodedCommand = [Convert]::ToBase64String($bytes)
-  Start-Process powershell.exe -Verb RunAs -ArgumentList "-NoExit", "-encodedCommand", $encodedCommand
-}
-
-Set-Alias su Start-RunAs
+Set-Alias -Name: "sudo" -Value: "Invoke-As-Admin"
+Set-Alias -Name: "su" -Value: "sudo"
 
 # grep
 Function grep {
