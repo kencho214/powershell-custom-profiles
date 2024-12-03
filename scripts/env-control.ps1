@@ -72,6 +72,26 @@ function noproxy {
   Write-Host "noproxy [add|rm] [host1,host2,...]"
 }
 
+function enableProxy {
+  $httpProxy = userenv "__HTTP_PROXY"
+  $httpsProxy = userenv "__HTTPS_PROXY"
+
+  userenv "HTTP_PROXY=$httpProxy"
+  userenv "HTTPS_PROXY=$httpsProxy"
+}
+
+function disableProxy {
+  $httpProxy = userenv "HTTP_PROXY"
+  $httpsProxy = userenv "HTTPS_PROXY"
+
+  userenv "__HTTP_PROXY=$httpProxy"
+  userenv "__HTTPS_PROXY=$httpsProxy"
+
+  rmuserenv "HTTP_PROXY"
+  rmuserenv "HTTPS_PROXY"
+}
+
+
 ##################
 # Functions
 ##################
@@ -97,6 +117,23 @@ function userenv {
 
   Set-Item "env:${key}" $value
   [System.Environment]::SetEnvironmentVariable($key, $value, "User")
+}
+
+function rmuserenv {
+  if ($args.Length -eq 0) {
+    printenv
+    return
+  }
+
+  ($key, $value) = $args[0] -split "="
+
+  if ($key -eq "path") {
+    Write-Host "path should not overwrite by this command." -ForegroundColor Red
+    Write-Host "use addpath/rmpath/getpath instead." -ForegroundColor Yellow
+    return
+  }
+
+  [System.Environment]::SetEnvironmentVariable($key, "", "User")
 }
 
 function getpath {
