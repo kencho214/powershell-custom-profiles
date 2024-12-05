@@ -41,3 +41,21 @@ function ReposRemote {
   git clone $repoUrl "$ghqRoot\$selected"
   code $(ghq list -p -e $selected) --disable-extensions
 }
+
+function SshHosts {
+  $sshConfig = Get-Content "~\.ssh\**\config"
+  $sshHosts = $sshConfig -cmatch "Host "
+  $hosts = $sshHosts -replace "Host ", ""
+  Write-Output $hosts
+}
+
+function SshRemote {
+  $selected = SshHosts | peco
+
+  if ($selected.Length -le 0) {
+    return
+  }
+
+  Write-Host "ssh $selected"
+  ssh $selected
+}
