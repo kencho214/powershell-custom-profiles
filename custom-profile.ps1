@@ -18,6 +18,13 @@ if ($GitPromptSettings) {
   $GitPromptSettings.DefaultPromptSuffix.Text = ' $ '
 }
 
+# pwsh (Powershell 7)
+# winget install --id Microsoft.PowerShell --source winget
+
+# windows build tools
+# winget install Microsoft.VisualStudio.2022.BuildTools
+
+# Load custom scripts
 Get-ChildItem $Env:PSCustomScripts\scripts | Where-Object Extension -eq ".ps1" | ForEach-Object { .$_.FullName }
 
 Write-Host "Custom PowerShell Environment Loaded" -ForegroundColor DarkGray
