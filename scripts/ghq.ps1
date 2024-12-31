@@ -1,6 +1,7 @@
-# winget install peco
-# winget install golang
-# winget install vscode
+# winget install --id peco.peco --source winget
+# winget install --id GoLang.Go --source winget
+# winget install --id vscode --source winget
+# winget install --id GitHub.cli --source winget
 # go install github.com/x-motemen/ghq@latest
 
 function Repos {
