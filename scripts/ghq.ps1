@@ -1,14 +1,22 @@
 # winget install --id peco.peco --source winget
 # winget install --id GoLang.Go --source winget
-# winget install --id vscode --source winget
 # winget install --id GitHub.cli --source winget
+# winget install --id Microsoft.VisualStudioCode --source winget
 # go install github.com/x-motemen/ghq@latest
+
+function CdRepo {
+  $repo_path = $(ghq list -p | peco)
+
+  if ($repo_path.Length -ge 1) {
+    cd $repo_path
+  }
+}
 
 function Repos {
   $repo_path = $(ghq list -p | peco)
 
   if ($repo_path.Length -ge 1) {
-    code $repo_path --disable-extensions
+    code $repo_path
   }
 }
 
@@ -24,7 +32,7 @@ function ReposRemote {
   $localPath = ghq list -p -e $selected
 
   if ($localPath.Length -ge 1) {
-    code $localPath --disable-extensions
+    code $localPath
     return
   }
 
@@ -40,7 +48,7 @@ function ReposRemote {
   }
 
   git clone $repoUrl "$ghqRoot\$selected"
-  code $(ghq list -p -e $selected) --disable-extensions
+  code $(ghq list -p -e $selected)
 }
 
 function SshHosts {
