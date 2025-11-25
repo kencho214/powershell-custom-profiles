@@ -4,6 +4,9 @@
 # winget install --id Microsoft.VisualStudioCode --source winget
 # go install github.com/x-motemen/ghq@latest
 
+# $editor = "code"
+$editor = "antigravity"
+
 function CdRepo {
   $repo_path = $(ghq list -p | peco)
 
@@ -16,7 +19,7 @@ function Repos {
   $repo_path = $(ghq list -p | peco)
 
   if ($repo_path.Length -ge 1) {
-    code $repo_path
+    & $editor $repo_path
   }
 }
 
@@ -32,7 +35,7 @@ function ReposRemote {
   $localPath = ghq list -p -e $selected
 
   if ($localPath.Length -ge 1) {
-    code $localPath
+    & $editor $localPath
     return
   }
 
@@ -48,7 +51,7 @@ function ReposRemote {
   }
 
   git clone $repoUrl "$ghqRoot\$selected"
-  code $(ghq list -p -e $selected)
+  & $editor $(ghq list -p -e $selected)
 }
 
 function SshHosts {
