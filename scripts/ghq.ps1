@@ -4,8 +4,8 @@
 # winget install --id Microsoft.VisualStudioCode --source winget
 # go install github.com/x-motemen/ghq@latest
 
-# $editor = "code"
-$editor = "antigravity"
+$editor = "code"
+# $editor = "antigravity"
 
 function CdRepo {
   $repo_path = $(ghq list -p | peco)

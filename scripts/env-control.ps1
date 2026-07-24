@@ -9,7 +9,7 @@ Set-Item "Env:hosts" "C:\Windows\System32\drivers\etc\hosts"
 ##################
 
 function addNoProxy {
-  $noProxy = $($Env:NO_PROXY -split "\s*\,\s*")
+  $noProxy = @($Env:NO_PROXY -split "\s*\,\s*")
 
   $tobeAdded = New-Object System.Collections.ArrayList
   foreach ($elm in ($args)) {
@@ -20,17 +20,16 @@ function addNoProxy {
   foreach ($elm in ($noProxy + $tobeAdded)) {
     if (!$elm) { continue }
     if ($list -contains $elm) { continue }
-    if ($list -match "(^\s*$)") { continue }
     $list += $elm
   }
 
   $list = $list | Sort-Object
-  
+
   userenv "NO_PROXY=$($list -join ',')"
 }
 
 function rmNoProxy {
-  $noProxy = $($Env:NO_PROXY -split "\s*\,\s*")
+  $noProxy = @($Env:NO_PROXY -split "\s*\,\s*")
 
   $tobeRemoved = New-Object System.Collections.ArrayList
   foreach ($elm in ($args)) {
@@ -42,7 +41,6 @@ function rmNoProxy {
     if (!$elm) { continue }
     if ($list -contains $elm) { continue }
     if ($tobeRemoved -contains $elm) { continue }
-    if ($list -match "(^\s*$)") { continue }
     $list += $elm
   }
 
@@ -52,7 +50,7 @@ function rmNoProxy {
 }
 
 function printNoProxy {
-  Write-Output $($Env:NO_PROXY -split "\s*\,\s*")
+  Write-Output @($Env:NO_PROXY -split "\s*\,\s*")
 }
 
 function noproxy {
@@ -102,11 +100,11 @@ function userenv {
     return
   }
 
-  ($key, $value) = $args[0] -split "="
+  $parts = $args[0] -split "=", 2
+  $key = $parts[0]
 
-  if (!$value) {
-    [System.Environment]::GetEnvironmentVariable($args[0])
-    return
+  if ($parts.Length -eq 1) {
+    return [System.Environment]::GetEnvironmentVariable($key)
   }
 
   if ($key -eq "path") {
@@ -115,6 +113,7 @@ function userenv {
     return
   }
 
+  $value = $parts[1]
   Set-Item "env:${key}" $value
   [System.Environment]::SetEnvironmentVariable($key, $value, "User")
 }
@@ -125,7 +124,7 @@ function rmuserenv {
     return
   }
 
-  ($key, $value) = $args[0] -split "="
+  $key = ($args[0] -split "=", 2)[0]
 
   if ($key -eq "path") {
     Write-Host "path should not overwrite by this command." -ForegroundColor Red
@@ -133,6 +132,7 @@ function rmuserenv {
     return
   }
 
+  Remove-Item "env:${key}" -ErrorAction SilentlyContinue
   [System.Environment]::SetEnvironmentVariable($key, "", "User")
 }
 

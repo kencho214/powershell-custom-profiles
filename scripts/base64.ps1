@@ -1,13 +1,17 @@
 function base64 {
-  if ($args[0] -eq "-h" -or $args[0] -eq "--help") {
-  }
-  if ($args[0] -eq "-d") {
-    return decodeBase64 $args[1] $args[2]
-  }
-  elseif ($args[0].Length -ge 1) {
-    return encodeBase64 $args[0] $args[1];
+  if ($args.Count -eq 0 -or $args[0] -eq "-h" -or $args[0] -eq "--help") {
+    Write-Base64Usage
+    return
   }
 
+  if ($args[0] -eq "-d" -or $args[0] -eq "--decode") {
+    return decodeBase64 $args[1] $args[2]
+  }
+
+  return encodeBase64 $args[0] $args[1]
+}
+
+function Write-Base64Usage {
   Write-Host "base64 [filename]"
   Write-Host "base64 [-t|--text] [string]"
   Write-Host "base64 [-d|--decode] [filename]"
@@ -15,28 +19,38 @@ function base64 {
 }
 
 function encodeBase64 {
-  $bytes = ""
   if ($args[0] -eq "-t" -or $args[0] -eq "--text") {
     $bytes = ([System.Text.Encoding]::Default).GetBytes($args[1])
   }
   else {
-    $bytes = Get-Content $args[0] -Encoding Byte
+    if (-not (Test-Path -LiteralPath $args[0] -PathType Leaf)) {
+      Write-Error "File not found: $($args[0])"
+      return
+    }
+    if ($PSVersionTable.PSEdition -eq "Core") {
+      $bytes = Get-Content -LiteralPath $args[0] -AsByteStream
+    }
+    else {
+      $bytes = Get-Content -LiteralPath $args[0] -Encoding Byte
+    }
   }
 
-  $rtn = [Convert]::ToBase64String($bytes)
-  return $rtn
+  return [Convert]::ToBase64String($bytes)
 }
 
 function decodeBase64 {
-  $txt = ""
   if ($args[0] -eq "-t" -or $args[0] -eq "--text") {
     $txt = $args[1]
   }
   else {
-    $txt = Get-Content $args[0]
+    if (-not (Test-Path -LiteralPath $args[0] -PathType Leaf)) {
+      Write-Error "File not found: $($args[0])"
+      return
+    }
+    # strip whitespace/newlines in case the file wraps base64 across lines
+    $txt = (Get-Content -LiteralPath $args[0] -Raw) -replace '\s', ''
   }
-  
+
   $bytes = [System.Convert]::FromBase64String($txt)
-  $rtn = [System.Text.Encoding]::Default.GetString($bytes)
-  return $rtn
+  return [System.Text.Encoding]::Default.GetString($bytes)
 }

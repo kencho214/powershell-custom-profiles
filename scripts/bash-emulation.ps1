@@ -12,8 +12,8 @@ function Invoke-As-Admin() {
     gsudo "pwsh.exe -Login -Command { $cmd }"
 }
 
-Set-Alias -Name: "sudo" -Value: "Invoke-As-Admin"
-Set-Alias -Name: "su" -Value: "sudo"
+Set-Alias -Name "sudo" -Value "Invoke-As-Admin"
+Set-Alias -Name "su" -Value "sudo"
 
 # grep
 Function grep {
@@ -56,9 +56,12 @@ Function grep {
           Outputs all lines, including ones that do not match. (Alias: -p)
   
       .PARAMETER Narrow
-          Converts wide characters into narrow ones internally. (Alias: -n)
+          Converts wide characters into narrow ones internally. (Alias: -w)
           Useful when you don't want to distinguish between narrow and wide characters.
-  
+
+      .PARAMETER Number
+          Prefixes each output line with its line number. (Alias: -n)
+
       .PARAMETER SimpleMatch
           Uses a simple match rather than a regular expression match. (Alias: -s)
   
@@ -204,7 +207,16 @@ Remove-Item alias:pwd -Force
 function pwd { $(Get-Location).Path }
 
 # touch
-function touch { Write-Host "" > $args }
+function touch {
+  foreach ($file in $args) {
+    if (Test-Path -LiteralPath $file) {
+      (Get-Item -LiteralPath $file).LastWriteTime = Get-Date
+    }
+    else {
+      New-Item -ItemType File -Path $file | Out-Null
+    }
+  }
+}
 
 # vim
 function vim {
@@ -236,42 +248,20 @@ function ln {
   New-Item -ItemType SymbolicLink -Name $args[1] -Target $args[2]
 }
 
-# mklink
-function mklink { ln $args }
-
-# unlink
-function unlink {
-  Param($path)
-
-  if (!(Test-Path $path)) {
-    Write-Host "not found"
-    return;
-  }
-
-  $file = Get-Item $path -Force -ea SilentlyContinue
-  if (!($file.Attributes -band [IO.FileAttributes]::ReparsePoint)) {
-    $file.Is
-    Write-Host "file is not symlink"
-    return
-  }
-
-  $file.Delete()
-}
-
 # export
 function export {
   if ($args.Length -eq 0) {
     return printenv
   }
 
-  ($key, $value) = $args[0] -split "="
-  if ($key -and !$value) {
-    [System.Environment]::GetEnvironmentVariable($args[0])
+  $parts = $args[0] -split "=", 2
+  $key = $parts[0]
+
+  if ($parts.Length -eq 1) {
+    return [System.Environment]::GetEnvironmentVariable($key)
   }
 
-  if ($key -and $value) {
-    set-item "env:${key}" $value
-  }
+  Set-Item "env:${key}" $parts[1]
 }
 
 # bd
