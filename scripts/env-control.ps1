@@ -74,8 +74,8 @@ function enableProxy {
   $httpProxy = userenv "__HTTP_PROXY"
   $httpsProxy = userenv "__HTTPS_PROXY"
 
-  userenv "HTTP_PROXY=$httpProxy"
-  userenv "HTTPS_PROXY=$httpsProxy"
+  if ($httpProxy) { userenv "HTTP_PROXY=$httpProxy" }
+  if ($httpsProxy) { userenv "HTTPS_PROXY=$httpsProxy" }
 }
 
 function disableProxy {
@@ -104,7 +104,7 @@ function userenv {
   $key = $parts[0]
 
   if ($parts.Length -eq 1) {
-    return [System.Environment]::GetEnvironmentVariable($key)
+    return [System.Environment]::GetEnvironmentVariable($key, "User")
   }
 
   if ($key -eq "path") {
