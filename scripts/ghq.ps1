@@ -54,6 +54,55 @@ function ReposRemote {
   & $editor $(ghq list -p -e $selected)
 }
 
+function ReposUpdate {
+  $env:GIT_TERMINAL_PROMPT = "0"
+
+  foreach ($repo in $(ghq list -p)) {
+    if (-not (git -C $repo remote get-url origin 2>$null)) {
+      continue
+    }
+
+    Write-Output "### $repo"
+
+    if ($(git -C $repo status --porcelain)) {
+      git -C $repo fetch origin --prune -q
+      Write-Output "  skip: uncommitted changes"
+      continue
+    }
+
+    git -C $repo fetch origin --prune -q
+
+    $target = $null
+    foreach ($b in "develop", "main", "master") {
+      git -C $repo show-ref --verify --quiet "refs/remotes/origin/$b"
+      if ($LASTEXITCODE -eq 0) {
+        $target = $b
+        break
+      }
+    }
+
+    if (-not $target) {
+      Write-Output "  skip: no develop/main/master on origin"
+      continue
+    }
+
+    git -C $repo show-ref --verify --quiet "refs/heads/$target"
+    if ($LASTEXITCODE -eq 0) {
+      git -C $repo checkout -q $target
+    } else {
+      git -C $repo checkout -q -t "origin/$target"
+    }
+
+    git -C $repo merge --ff-only "origin/$target"
+
+    if (Test-Path "$repo\.gitmodules") {
+      git -C $repo submodule update
+    }
+
+    Write-Output "  -> $(git -C $repo branch --show-current)"
+  }
+}
+
 function SshHosts {
   $sshConfig = Get-Content "~\.ssh\**\config"
   $sshHosts = $sshConfig -cmatch "Host "
@@ -71,3 +120,4 @@ function SshRemote {
   Write-Host "ssh $selected"
   ssh $selected
 }
+
